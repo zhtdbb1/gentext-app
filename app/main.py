@@ -3,10 +3,18 @@ from pydantic import BaseModel
 
 from app.bigram_model import BigramModel
 from app.embedding_model import EmbeddingModel
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    File,
+    UploadFile,
+)
+from app.image_classifier import ImageClassifier
 
 
 app = FastAPI()
 embedding_model = EmbeddingModel()
+image_classifier = ImageClassifier()
 
 # Sample corpus for the bigram model
 corpus = [
@@ -51,6 +59,28 @@ class EmbeddingRequest(BaseModel):
 def get_embedding(request: EmbeddingRequest):
     try:
         return embedding_model.get_embedding(request.word)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=422,
+            detail=str(error),
+        ) from error
+
+
+
+@app.post("/classify")
+def classify_image(file: UploadFile = File(...)):
+    max_size = 10 * 1024 * 1024
+    image_bytes = file.file.read(max_size + 1)
+
+    if len(image_bytes) > max_size:
+        raise HTTPException(
+            status_code=413,
+            detail="Upload an image smaller than 10 MB.",
+        )
+
+    try:
+        return image_classifier.predict(image_bytes)
+
     except ValueError as error:
         raise HTTPException(
             status_code=422,
