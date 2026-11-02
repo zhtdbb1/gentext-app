@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
+from app.rnn_model import RNNTextGenerator
 from app.bigram_model import BigramModel
 from app.embedding_model import EmbeddingModel
 from fastapi import (
@@ -28,7 +28,7 @@ corpus = [
 
 # Create the bigram model
 bigram_model = BigramModel(corpus)
-
+rnn_generator = RNNTextGenerator()
 
 # Request format for the /generate endpoint
 class TextGenerationRequest(BaseModel):
@@ -80,6 +80,46 @@ def classify_image(file: UploadFile = File(...)):
 
     try:
         return image_classifier.predict(image_bytes)
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=422,
+            detail=str(error),
+        ) from error
+
+
+
+class RNNGenerationRequest(BaseModel):
+    start_word: str = Field(
+        min_length=1,
+        max_length=200,
+    )
+
+    length: int = Field(
+        default=50,
+        ge=1,
+        le=200,
+    )
+
+    temperature: float = Field(
+        default=1.0,
+        ge=0.1,
+        le=2.0,
+    )
+
+
+@app.post("/generate_with_rnn")
+def generate_with_rnn(request: RNNGenerationRequest):
+    try:
+        generated_text = rnn_generator.generate_text(
+            seed_text=request.start_word,
+            length=request.length,
+            temperature=request.temperature,
+        )
+
+        return {
+            "generated_text": generated_text
+        }
 
     except ValueError as error:
         raise HTTPException(
