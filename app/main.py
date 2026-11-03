@@ -1,3 +1,5 @@
+from fastapi import Response
+from app.digit_generator import generate_digit_png
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from app.rnn_model import RNNTextGenerator
@@ -126,3 +128,18 @@ def generate_with_rnn(request: RNNGenerationRequest):
             status_code=422,
             detail=str(error),
         ) from error
+
+
+class DigitGenerationRequest(BaseModel):
+    count: int = Field(default=16, ge=1, le=64)
+    seed: int = Field(default=42, ge=0, le=2147483647)
+
+
+@app.post('/generate_digits', response_class=Response,
+          responses={200: {'content': {'image/png': {}}}})
+def generate_digits(request: DigitGenerationRequest):
+    try:
+        image = generate_digit_png(request.count, request.seed)
+    except FileNotFoundError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    return Response(content=image, media_type='image/png')

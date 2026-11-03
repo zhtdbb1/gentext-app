@@ -203,3 +203,8 @@ The word-embedding endpoint uses a pretrained model; it does not train a new mod
 ## Course Context
 
 Created for Assignment 1 of Applied Generative AI, extending the Module 3 API with the word-embedding functionality from Module 2.
+
+
+## Assignment 3: MNIST GAN
+
+See [Assignment 3 setup, training, architecture, and API instructions](ASSIGNMENT3.md). POST `/generate_digits` returns a PNG grid of generated handwritten digits.

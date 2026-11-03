@@ -1,0 +1,76 @@
+{
+  "dataset": "MNIST",
+  "training_images": 60000,
+  "seed": 42,
+  "batch_size": 128,
+  "optimizer": "Adam",
+  "learning_rate": 0.0002,
+  "betas": [
+    0.5,
+    0.999
+  ],
+  "loss": "binary cross entropy",
+  "device": "cpu",
+  "history": [
+    {
+      "epoch": 1,
+      "generator_loss": 2.2123313565572102,
+      "discriminator_loss": 0.1897827222506205,
+      "seconds": 166.10743607400218
+    },
+    {
+      "epoch": 2,
+      "generator_loss": 2.4247008613586427,
+      "discriminator_loss": 0.17773525211811067,
+      "seconds": 121.59745705500245
+    },
+    {
+      "epoch": 3,
+      "generator_loss": 2.471618374188741,
+      "discriminator_loss": 0.18013736006418865,
+      "seconds": 92.52923350200581
+    },
+    {
+      "epoch": 4,
+      "generator_loss": 2.4241920867919924,
+      "discriminator_loss": 0.19168207400639853,
+      "seconds": 85.37559622799745
+    },
+    {
+      "epoch": 5,
+      "generator_loss": 2.4570825618108114,
+      "discriminator_loss": 0.19214800686041514,
+      "seconds": 83.02495741499297
+    },
+    {
+      "epoch": 6,
+      "generator_loss": 2.478636484781901,
+      "discriminator_loss": 0.19163174839814504,
+      "seconds": 82.55488867900567
+    },
+    {
+      "epoch": 7,
+      "generator_loss": 2.591270222409566,
+      "discriminator_loss": 0.18197275984287262,
+      "seconds": 81.7218610389973
+    },
+    {
+      "epoch": 8,
+      "generator_loss": 2.6675320470174153,
+      "discriminator_loss": 0.17377984488805134,
+      "seconds": 81.22971382299147
+    },
+    {
+      "epoch": 9,
+      "generator_loss": 2.7851140555063885,
+      "discriminator_loss": 0.162669708387057,
+      "seconds": 81.00355473799573
+    },
+    {
+      "epoch": 10,
+      "generator_loss": 2.8223204979578655,
+      "discriminator_loss": 0.16819459880193074,
+      "seconds": 80.70887863499229
+    }
+  ]
+}
