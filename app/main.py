@@ -143,3 +143,34 @@ def generate_digits(request: DigitGenerationRequest):
     except FileNotFoundError as error:
         raise HTTPException(status_code=503, detail=str(error)) from error
     return Response(content=image, media_type='image/png')
+
+
+# Add this block to app/main.py. BaseModel, Field, HTTPException, and Response
+# are already imported by your existing application.
+from app.image_generators import image_grid_png
+
+
+class ImageGenerationRequest(BaseModel):
+    count: int = Field(default=4, ge=1, le=8)
+    steps: int = Field(default=50, ge=1, le=200)
+    seed: int = Field(default=42, ge=0, le=2147483647)
+
+
+def generated_image_response(kind, request):
+    try:
+        png = image_grid_png(kind, request.count, request.steps, request.seed)
+    except FileNotFoundError as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+    return Response(content=png, media_type='image/png')
+
+
+@app.post('/generate_diffusion', response_class=Response,
+          responses={200: {'content': {'image/png': {}}}})
+def generate_diffusion(request: ImageGenerationRequest):
+    return generated_image_response('diffusion', request)
+
+
+@app.post('/generate_energy', response_class=Response,
+          responses={200: {'content': {'image/png': {}}}})
+def generate_energy(request: ImageGenerationRequest):
+    return generated_image_response('energy', request)

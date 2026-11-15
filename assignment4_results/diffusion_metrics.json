@@ -1,0 +1,49 @@
+{
+  "model": "diffusion",
+  "device": "cpu",
+  "training_examples": 50000,
+  "batch_size": 32,
+  "langevin_steps": 60,
+  "history": [
+    {
+      "epoch": 1,
+      "mean_loss": 0.11419005318522453
+    },
+    {
+      "epoch": 2,
+      "mean_loss": 0.040959846927523615
+    },
+    {
+      "epoch": 3,
+      "mean_loss": 0.03677475758194924
+    },
+    {
+      "epoch": 4,
+      "mean_loss": 0.034796620823144914
+    },
+    {
+      "epoch": 5,
+      "mean_loss": 0.033736822826862335
+    },
+    {
+      "epoch": 6,
+      "mean_loss": 0.033039185435771945
+    },
+    {
+      "epoch": 7,
+      "mean_loss": 0.03260215043604374
+    },
+    {
+      "epoch": 8,
+      "mean_loss": 0.032068898322582244
+    },
+    {
+      "epoch": 9,
+      "mean_loss": 0.03168224267065525
+    },
+    {
+      "epoch": 10,
+      "mean_loss": 0.031187150354981423
+    }
+  ]
+}

@@ -208,3 +208,65 @@ Created for Assignment 1 of Applied Generative AI, extending the Module 3 API wi
 ## Assignment 3: MNIST GAN
 
 See [Assignment 3 setup, training, architecture, and API instructions](ASSIGNMENT3.md). POST `/generate_digits` returns a PNG grid of generated handwritten digits.
+
+
+## Assignment 4: CIFAR-10 diffusion and energy generators
+
+Both models generate unconditional 32x32 RGB CIFAR-10-style image grids.
+
+- `POST /generate_diffusion`: reverse diffusion using the EMA UNet.
+- `POST /generate_energy`: projected Langevin sampling using input gradients.
+- JSON example: `{"count":4,"steps":50,"seed":42}`. Responses are PNG images.
+- `count` is 1-8, `steps` is 1-200, and `seed` is 0-2147483647.
+- Missing checkpoints return 503; invalid inputs return 422.
+
+Install dependencies with `uv sync --frozen --no-dev --no-install-project`.
+Train each model from the project root:
+
+```bash
+uv run --no-sync python train_image_generators.py --model diffusion --epochs 10 --batch-size 32
+uv run --no-sync python train_image_generators.py --model energy --epochs 10 --batch-size 32 --langevin-steps 60
+```
+
+Without `--limit`, all 50,000 CIFAR-10 training images are used; labels are ignored.
+Add `--resume` to continue from the last completed epoch, using the same data limit and sampling settings.
+Training uses Adam (learning rate 0.0001). Diffusion minimizes noise-prediction MSE;
+the EBM lowers real-image energy relative to detached negatives, with squared-energy regularization.
+EBM sampling differentiates energy with respect to image pixels and does not update model weights.
+The sampler uses 60 steps in the full training configuration; finite-step projected sampling is approximate.
+
+Checkpoints are `models/cifar10_diffusion.pth` and `models/cifar10_energy.pth`.
+Epoch sample grids and actual training metrics are in `assignment4_results/`.
+Optimizer/resume states and the CIFAR-10 dataset stay in ignored `data/`.
+Training metadata and losses should be consulted for the actual completed run;
+an in-progress run must not be reported as ten completed epochs.
+
+Run focused and existing tests with:
+
+```bash
+uv run --no-sync python -m unittest discover -s tests -v
+```
+
+Start Docker Desktop, then build and run:
+
+```bash
+docker build -t gentext-app .
+docker run --rm -p 8000:80 gentext-app
+```
+
+Open http://127.0.0.1:8000/docs and query the new endpoints. To save images:
+
+```bash
+curl --fail -X POST http://127.0.0.1:8000/generate_diffusion -H 'Content-Type: application/json' -d '{"count":4,"steps":50,"seed":42}' --output diffusion_samples.png
+curl --fail -X POST http://127.0.0.1:8000/generate_energy -H 'Content-Type: application/json' -d '{"count":4,"steps":50,"seed":42}' --output energy_samples.png
+```
+
+The Dockerfile includes both `app/` and `models/`. Rebuild after changing weights.
+Models load once per server process, so restart after replacing a local checkpoint.
+The same seed and checkpoint reproduce the same image grid. These generators are
+unconditional and do not support choosing a requested CIFAR-10 class.
+
+Full CPU training is slow, and ten epochs does not guarantee recognizable images.
+Inspect saved sample grids for quality and diversity; successful HTTP responses alone
+only establish that deployment works. Small `--limit 128 --epochs 1` runs are smoke
+checks and must not be presented as full-data trained results.

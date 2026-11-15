@@ -1,0 +1,36 @@
+{
+  "http_endpoints": "passed",
+  "png_outputs": "passed",
+  "deterministic_seeds": "passed",
+  "invalid_input_422": "passed",
+  "existing_api_routes": "passed",
+  "runtime": {
+    "torch": "2.2.2+cpu",
+    "cuda": null,
+    "checkpoints": {
+      "diffusion": {
+        "epoch": 10,
+        "examples": 50000,
+        "dataset": "CIFAR10 training split",
+        "image_size": 32,
+        "channels": 3
+      },
+      "energy": {
+        "epoch": 10,
+        "examples": 50000,
+        "dataset": "CIFAR10 training split",
+        "image_size": 32,
+        "channels": 3
+      }
+    }
+  },
+  "image": "sha256:90db2565d52bdf675c61d289c6d3adf8bd18f39e2907e4735a3055d4a0e7d85f",
+  "unit_and_integration_tests_passed": 12,
+  "full_training": {
+    "epochs_per_model": 10,
+    "examples_per_epoch": 50000,
+    "batch_size": 32,
+    "energy_langevin_steps": 60
+  },
+  "quality_note": "Generated samples are saved for visual assessment. Full-data training and HTTP success do not guarantee recognizable images."
+}

@@ -1,0 +1,49 @@
+{
+  "model": "energy",
+  "device": "cpu",
+  "training_examples": 50000,
+  "batch_size": 32,
+  "langevin_steps": 60,
+  "history": [
+    {
+      "epoch": 1,
+      "mean_loss": -4.504583858892881
+    },
+    {
+      "epoch": 2,
+      "mean_loss": -4.982478154754639
+    },
+    {
+      "epoch": 3,
+      "mean_loss": -4.988600814056396
+    },
+    {
+      "epoch": 4,
+      "mean_loss": -4.992474411468506
+    },
+    {
+      "epoch": 5,
+      "mean_loss": -4.994851332855225
+    },
+    {
+      "epoch": 6,
+      "mean_loss": -4.996258459625244
+    },
+    {
+      "epoch": 7,
+      "mean_loss": -4.997097836151123
+    },
+    {
+      "epoch": 8,
+      "mean_loss": -4.9976125335693355
+    },
+    {
+      "epoch": 9,
+      "mean_loss": -4.997986319122314
+    },
+    {
+      "epoch": 10,
+      "mean_loss": -4.99823231552124
+    }
+  ]
+}
